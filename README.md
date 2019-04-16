@@ -24,7 +24,7 @@ Originalmente criado por Vinícius de Andrade "Seja Fullstack com Asp.NET Core 2
  <ul>
   <li>dotnet restore (executar no diretório raiz do projeto)</li>
   <li>dotnet watch run (executar no diretório ProAgil.WebAPI) </li> 
-  <li>acessar no navegador http://localhost:5000 </li> 
+  <li>acessar no navegador http://localhost:8080 </li> 
  </ul>
  <h5>Frontend</h5>
  <ul>
