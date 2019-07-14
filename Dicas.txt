@@ -1,8 +1,0 @@
-﻿Crtl + Shift + P no VS Code abre terminal de comando 
-Selecionar Nuget Package e instalar 
-Microsoft.AspNetCore.Identity.EntityFrameworkCore
-
-
-npm i auth0/angular-jwt dentro do dotnetcore/ProAgil-App/
-ng g g auth/auth dentro de dotnetcore/ProAgil-App/
-npm install --save ngx-mask dentro do dotnetcore/ProAgil-App/
