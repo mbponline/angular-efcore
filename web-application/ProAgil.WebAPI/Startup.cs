@@ -52,6 +52,7 @@ namespace ProAgil.WebAPI
             // app.UseHttpsRedirection(); desabilitado https temporariamente
             //permite compartilhamento de recursos cruzados para toda origem, todos os métodos e todos os cabeçalhos
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseStaticFiles(); //acessar imagens no diretorio raiz
             app.UseMvc();
         }
     }
