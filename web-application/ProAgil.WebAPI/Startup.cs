@@ -27,10 +27,12 @@ namespace ProAgil.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql => sql.MigrationsAssembly(migrationAssembly)));
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddCors();
 
         }
 
@@ -47,7 +49,9 @@ namespace ProAgil.WebAPI
                 app.UseHsts();
             }
 
-           // app.UseHttpsRedirection(); desabilitado https temporariamente
+            // app.UseHttpsRedirection(); desabilitado https temporariamente
+            //permite compartilhamento de recursos cruzados para toda origem, todos os métodos e todos os cabeçalhos
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseMvc();
         }
     }

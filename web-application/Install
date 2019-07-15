@@ -5,4 +5,10 @@ Instalar npm
 Instalar CLI Angular (https://cli.angular.io/quickstart)
 npm install -g @angular/cli
 
+Instalar Bootstrap (https://getbootstrap.com.br/docs/4.1/getting-started/download/)
+npm install bootstrap
+
+Instalar Fonte Awesome (https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers)
+npm install --save-dev @fortawesome/fontawesome-free
+
 
