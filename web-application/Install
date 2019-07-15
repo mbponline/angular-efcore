@@ -1,0 +1,8 @@
+Instalar dotnetcore runtime e SDK
+
+Instalar npm
+
+Instalar CLI Angular (https://cli.angular.io/quickstart)
+npm install -g @angular/cli
+
+
