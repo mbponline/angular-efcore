@@ -1,9 +1,10 @@
-<form class="form-inline" action="">
+<div class="form-inline" action="">
   <div class="form-group mb-2">
-    <input type="text" class="form-control mr-2" placeholder="buscar">
-    <button class="btn btn-outline-success">buscar</button>
+    <label class="mr-2">Filtro:</label>
+    <input type="text" class="form-control mr-2" placeholder="buscar" [(ngModel)]="filtroLista">
   </div>
-</form>
+</div>
+<h3>Filtro: {{filtroLista}}</h3>
 <table class="table table-striped">
   <thead class="thead-light">
     <tr>
@@ -21,14 +22,19 @@
       <th>Opções</th>
     </tr>
   </thead>
+  <!--
+     Structural Directiva -> *ngIf 
+     Property Binding -> [style.with.px]
+     Interpolation -> {{evento.x}}
+  -->
   <tbody *ngIf="eventos && eventos.length">
-    <tr *ngFor="let evento of eventos">
+    <tr *ngFor="let evento of eventosFiltrados ">
       <td>
         <img *ngIf="mostrarImagem" src="http://localhost:5000/img{{evento.imagemURL}}" [style.width.px]="imagemLargura"
           [style.margin.px]="imagemMargem">
       </td>
       <td>{{evento.eventoId}}</td>
-      <td>{{evento.tema}}</td>
+      <td>{{evento.tema }}</td>
       <td>{{evento.local}}</td>
       <td>{{evento.dataEvento}}</td>
       <td>{{evento.qtdPessoas}}</td>
