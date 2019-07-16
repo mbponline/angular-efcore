@@ -28,8 +28,11 @@ namespace ProAgil.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var migrationAssembly = "ProAgil.Repository"; // typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddDbContext<ProAgilContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql => sql.MigrationsAssembly(migrationAssembly)));
+
+            //Injetar Dependecias
+            services.AddScoped<IProAgilRepository, ProAgilRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\web-application",
+    "\\web-application\\ProAgil.WebAPI",
+    "\\web-application\\ProAgil.WebAPI\\Controllers"
   ],
+  "SelectedNode": "\\web-application\\ProAgil.WebAPI\\Controllers\\EventoController.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -11,4 +11,7 @@ npm install bootstrap
 Instalar Fonte Awesome (https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers)
 npm install --save-dev @fortawesome/fontawesome-free
 
+Migrations
+executar dentro de Repository
+dotnet ef --startup-project ..\ProAgil.WebAPI\ migrations add initial
 
