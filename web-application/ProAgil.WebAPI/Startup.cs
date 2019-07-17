@@ -30,12 +30,13 @@ namespace ProAgil.WebAPI
         {
             var migrationAssembly = "ProAgil.Repository"; // typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddDbContext<ProAgilContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql => sql.MigrationsAssembly(migrationAssembly)));
-            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             //Injetar Dependecias
             services.AddScoped<IProAgilRepository, ProAgilRepository>();
 
+            services.AddAutoMapper();
 
             services.AddCors();
 
@@ -58,7 +59,7 @@ namespace ProAgil.WebAPI
             //permite compartilhamento de recursos cruzados para toda origem, todos os métodos e todos os cabeçalhos
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseStaticFiles(); //acessar imagens no diretorio raiz
-            
+
             app.UseMvc();
         }
     }
