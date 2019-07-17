@@ -4,13 +4,13 @@ namespace ProAgil.Domain
 {
     public class Lote
     {
-          public int Id { get; set; }
+        public int Id { get; set; }
         public string Nome { get; set; }
         public decimal Preco { get; set; }
         public DateTime? DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
         public int Quantidade { get; set; }
-        public int EventoId { get; set; } //chave estrangeira convenção EntityFramework
+        public int EventoId { get; set; } //chave estrangeira convenï¿½ï¿½o EntityFramework
         public Evento Evento { get; } //campo readonly
 
     }

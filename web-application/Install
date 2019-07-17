@@ -8,6 +8,9 @@ npm install -g @angular/cli
 Instalar Bootstrap (https://getbootstrap.com.br/docs/4.1/getting-started/download/)
 npm install bootstrap
 
+Instalar NGX Bootstrap (https://valor-software.com/ngx-bootstrap/#/)
+npm install ngx-bootstrap --save
+
 Instalar Fonte Awesome (https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers)
 npm install --save-dev @fortawesome/fontawesome-free
 
