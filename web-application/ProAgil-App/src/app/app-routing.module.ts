@@ -10,7 +10,9 @@ const routes: Routes = [
   { path: 'palestrantes', component: PalestrantesComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'contatos', component: ContatosComponent },
-
+  // path vazio ou qualquer um não mapeado são redirecionados para dashbord
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({

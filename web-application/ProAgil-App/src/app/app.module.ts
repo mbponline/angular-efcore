@@ -16,44 +16,47 @@ import { EventosComponent } from './eventos/eventos.component';
 import { NavComponent } from './nav/nav.component';
 import { PalestrantesComponent } from './palestrantes/palestrantes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ContatosComponent } from './contatos/contatos.component';
+import { TituloComponent } from './_shared/titulo/titulo.component';
 
 import { EventoService } from './_services/evento.service';
 
 import { DateTimeFormatPipePipe } from './_helpers/DateTimeFormatPipe.pipe';
-import { ContatosComponent } from './contatos/contatos.component';
+
 
 @NgModule({
-   declarations: [
-      AppComponent,
-      NavComponent,
-      EventosComponent,
-      PalestrantesComponent,
-      DateTimeFormatPipePipe,
-      DashboardComponent,
-      ContatosComponent
-   ],
-   imports: [
-      BrowserModule,
-      BsDropdownModule.forRoot(),
-      BsDatepickerModule.forRoot(),
-      TooltipModule.forRoot(),
-      ModalModule.forRoot(),
-      AppRoutingModule,
-      HttpClientModule, // parachamarapi
-      FormsModule,       // para utilizar o "tiuei databaide"
-      ReactiveFormsModule,
-      BrowserAnimationsModule, // required animations module
-      ToastrModule.forRoot({
-         timeOut: 10000,
-         positionClass: 'toast-bottom-right',
-         preventDuplicates: true
-      }) // ToastrModule added
-   ],
-   providers: [
-      EventoService
-   ],
-   bootstrap: [
-      AppComponent
-   ]
+  declarations: [
+    AppComponent,
+    NavComponent,
+    EventosComponent,
+    PalestrantesComponent,
+    DateTimeFormatPipePipe,
+    DashboardComponent,
+    ContatosComponent,
+    TituloComponent
+  ],
+  imports: [
+    BrowserModule,
+    BsDropdownModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    TooltipModule.forRoot(),
+    ModalModule.forRoot(),
+    AppRoutingModule,
+    HttpClientModule, // parachamarapi
+    FormsModule,       // para utilizar o "tiuei databaide"
+    ReactiveFormsModule,
+    BrowserAnimationsModule, // required animations module ToastrModule
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true
+    }) // ToastrModule added
+  ],
+  providers: [
+    EventoService
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }

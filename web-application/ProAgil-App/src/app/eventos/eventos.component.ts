@@ -14,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EventosComponent implements OnInit {
 
+  titulo = 'Eventos';
+
   constructor(
     private eventoService: EventoService
     , private modalService: BsModalService
