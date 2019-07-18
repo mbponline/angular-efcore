@@ -48,14 +48,14 @@ namespace ProAgil.Repository
             // inclui os palestrantes do evento se for solicitado
             // opção para economia de recursos: lotes e redessociais poderiam ser feitos assim também
             if (includePalestrantes)
-            {
+            { //referencia muitos para muitos 
                 query = query
                     .Include(pe => pe.PalestrantesEventos)
                     .ThenInclude(p => p.Palestrante);
             }
             //não travar recurso para retornar consulta
             query = query.AsNoTracking()
-                .OrderByDescending(c => c.DataEvento);
+                .OrderBy(c => c.Id);
 
             return await query.ToArrayAsync();
         }

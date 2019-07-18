@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System;
-namespace ProAgil.WebApi.Dtos
+namespace ProAgil.WebAPI.Dtos
 {
     public class PalestranteDto
     {
