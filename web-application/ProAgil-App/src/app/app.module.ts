@@ -14,18 +14,23 @@ import { TooltipModule, BsDropdownModule, ModalModule, BsDatepickerModule } from
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { NavComponent } from './nav/nav.component';
-
-import { DateTimeFormatPipePipe } from './_helpers/DateTimeFormatPipe.pipe';
+import { PalestrantesComponent } from './palestrantes/palestrantes.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { EventoService } from './_services/evento.service';
 
+import { DateTimeFormatPipePipe } from './_helpers/DateTimeFormatPipe.pipe';
+import { ContatosComponent } from './contatos/contatos.component';
 
 @NgModule({
    declarations: [
       AppComponent,
-      EventosComponent,
       NavComponent,
-      DateTimeFormatPipePipe
+      EventosComponent,
+      PalestrantesComponent,
+      DateTimeFormatPipePipe,
+      DashboardComponent,
+      ContatosComponent
    ],
    imports: [
       BrowserModule,
