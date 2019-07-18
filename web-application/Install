@@ -14,6 +14,11 @@ npm install ngx-bootstrap --save
 Instalar Fonte Awesome (https://fontawesome.com/how-to-use/on-the-web/setup/using-package-managers)
 npm install --save-dev @fortawesome/fontawesome-free
 
+Instalar Notificações (https://www.npmjs.com/package/ngx-toastr)
+npm install ngx-toastr --save
+npm install @angular/animations --save
+
+
 Migrations
 executar dentro de Repository
 dotnet ef --startup-project ..\ProAgil.WebAPI\ migrations add initial

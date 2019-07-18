@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace ProAgil.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] //post dados são esperados no body da requisição
     public class EventoController : ControllerBase
     {
         private readonly IProAgilRepository _repository;
@@ -112,7 +112,7 @@ namespace ProAgil.WebAPI.Controllers
         }
 
         //DELETE
-        [HttpDelete]
+        [HttpDelete("{EventoId}")]
         public async Task<IActionResult> Delete(int EventoId)
         {
             try
@@ -125,9 +125,9 @@ namespace ProAgil.WebAPI.Controllers
                     return Ok();
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Banco de dados falhou {ex.Message}");
             }
             return BadRequest();
         }
