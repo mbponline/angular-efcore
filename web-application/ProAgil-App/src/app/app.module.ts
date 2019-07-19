@@ -22,41 +22,47 @@ import { TituloComponent } from './_shared/titulo/titulo.component';
 import { EventoService } from './_services/evento.service';
 
 import { DateTimeFormatPipePipe } from './_helpers/DateTimeFormatPipe.pipe';
-
+import { UserComponent } from './user/user.component';
+import { LoginComponent } from './user/login/login.component';
+import { RegistrationComponent } from './user/registration/registration.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavComponent,
-    EventosComponent,
-    PalestrantesComponent,
-    DateTimeFormatPipePipe,
-    DashboardComponent,
-    ContatosComponent,
-    TituloComponent
-  ],
-  imports: [
-    BrowserModule,
-    BsDropdownModule.forRoot(),
-    BsDatepickerModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot(),
-    AppRoutingModule,
-    HttpClientModule, // parachamarapi
-    FormsModule,       // para utilizar o "tiuei databaide"
-    ReactiveFormsModule,
-    BrowserAnimationsModule, // required animations module ToastrModule
-    ToastrModule.forRoot({
-      timeOut: 10000,
-      positionClass: 'toast-bottom-right',
-      preventDuplicates: true
-    }) // ToastrModule added
-  ],
-  providers: [
-    EventoService
-  ],
-  bootstrap: [
-    AppComponent
-  ]
-})
-export class AppModule { }
+   declarations: [
+      AppComponent,
+      NavComponent,
+      EventosComponent,
+      PalestrantesComponent,
+      DateTimeFormatPipePipe,
+      DashboardComponent,
+      ContatosComponent,
+      TituloComponent,
+      UserComponent,
+      LoginComponent,
+      RegistrationComponent
+   ],
+   imports: [
+      BrowserModule,
+      BsDropdownModule.forRoot(),
+      BsDatepickerModule.forRoot(),
+      TooltipModule.forRoot(),
+      ModalModule.forRoot(),
+      AppRoutingModule,
+      HttpClientModule,  
+      FormsModule,        
+      ReactiveFormsModule,
+      BrowserAnimationsModule, 
+      ToastrModule.forRoot({
+        timeOut: 10000,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: true
+      }) 
+    ],
+    providers: [
+      EventoService
+    ],
+    bootstrap: [
+      AppComponent
+    ]
+  })
+  export class AppModule { }
+  
