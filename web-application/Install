@@ -18,6 +18,8 @@ Instalar Notificações (https://www.npmjs.com/package/ngx-toastr)
 npm install ngx-toastr --save
 npm install @angular/animations --save
 
+Instalar JWT Angular
+npm i @auth0/angular-jwt
 
 Migrations
 executar dentro de Repository
