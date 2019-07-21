@@ -18,8 +18,8 @@ using ProAgil.WebAPI.Dtos;
 namespace ProAgil.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
+        [ApiController]
+        public class UserController : ControllerBase
     {
         private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
@@ -34,8 +34,7 @@ namespace ProAgil.WebAPI.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet("GetUser")]
-        [AllowAnonymous]
+        [HttpGet("GetUser")]       
         public IActionResult GetUser()
         {
             return Ok(new UserDto());

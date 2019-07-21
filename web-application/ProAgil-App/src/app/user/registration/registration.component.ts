@@ -51,8 +51,7 @@ export class RegistrationComponent implements OnInit {
 
   cadastrarUsuario() {
     if (this.registerForm.valid) {
-      this.user = Object.assign({ password: this.registerForm.get('passwords.password').value }, this.registerForm.value);
-     
+      this.user = Object.assign({ password: this.registerForm.get('passwords.password').value }, this.registerForm.value);     
       this.authService.register(this.user).subscribe(
         () => {
           this.router.navigate(['/user/login']);
@@ -65,7 +64,7 @@ export class RegistrationComponent implements OnInit {
                 this.toastr.error('Cadastro duplicado!');
                 break;
               default:
-                this.toastr.error(`Erro no Cadatro! CODE: ${element.code}`);
+                this.toastr.error(`Erro no cadatro! CODE: ${element.code}`);
                 break;
             }
           });
