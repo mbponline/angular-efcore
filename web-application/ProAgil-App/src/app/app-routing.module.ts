@@ -7,8 +7,10 @@ import { ContatosComponent } from './contatos/contatos.component';
 import { UserComponent } from './user/user.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegistrationComponent } from './user/registration/registration.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
+  // Guard responsável por manter o acesso somente as solicitações que possuem token
   {
     path: 'user', component: UserComponent,
     children: [
@@ -16,10 +18,10 @@ const routes: Routes = [
       { path: 'registration', component: RegistrationComponent }
     ]
   },
-  { path: 'eventos', component: EventosComponent },
-  { path: 'palestrantes', component: PalestrantesComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'contatos', component: ContatosComponent },
+  { path: 'eventos', component: EventosComponent, canActivate: [AuthGuard] },
+  { path: 'palestrantes', component: PalestrantesComponent, canActivate: [AuthGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'contatos', component: ContatosComponent, canActivate: [AuthGuard] },
   // path vazio ou qualquer um não mapeado são redirecionados para dashbord
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }

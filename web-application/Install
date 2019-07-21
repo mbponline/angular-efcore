@@ -21,6 +21,9 @@ npm install @angular/animations --save
 Instalar JWT Angular
 npm i @auth0/angular-jwt
 
+Instalar Angular Guard
+ng g g auth/auth
+
 Migrations
 executar dentro de Repository
 dotnet ef --startup-project ..\ProAgil.WebAPI\ migrations add initial

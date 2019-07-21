@@ -10,16 +10,15 @@ import { Evento } from '../_models/Evento';
 export class EventoService {
 
   baseURL = 'http://localhost:5000/api/evento';
-  tokenHeader: HttpHeaders;
+
   constructor(private http: HttpClient) {
-    this.tokenHeader = new HttpHeaders({ 'Authorization': `Bearer ${localStorage.getItem('token')}` });
   }
 
   // observable é lazy / preguiçoso / economico
   // promise é eager / ansioso / impaciente
   // retorno baseado em eventos
   getAllEvento(): Observable<Evento[]> {
-    return this.http.get<Evento[]>(this.baseURL, { headers: this.tokenHeader });
+    return this.http.get<Evento[]>(this.baseURL );
   }
 
   getEventoByTema(tema: string): Observable<Evento[]> {
@@ -34,11 +33,11 @@ export class EventoService {
     const fileToUpload = <File>file[0];
     const formData = new FormData();
     formData.append('file', fileToUpload, name);
-    return this.http.post(`${this.baseURL}/upload`, FormData,{ headers: this.tokenHeader });
+    return this.http.post(`${this.baseURL}/upload`, FormData );
   }
 
   postEvento(evento: Evento) {
-    return this.http.post(this.baseURL, evento, { headers: this.tokenHeader });
+    return this.http.post(this.baseURL, evento );
   }
 
   putEvento(evento: Evento) {
