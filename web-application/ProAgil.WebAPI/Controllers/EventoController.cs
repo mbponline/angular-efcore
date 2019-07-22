@@ -132,14 +132,11 @@ namespace ProAgil.WebAPI.Controllers
                 var evento = await _repository.GetEventoAsyncById(EventoId, false);
                 if (evento == null) return NotFound();
 
-
                 var idLotes = new List<int>();
                 model.Lotes.ForEach(item => idLotes.Add(item.Id));
 
-
                 var idRedesSociais = new List<int>();
                 model.RedesSociais.ForEach(item => idRedesSociais.Add(item.Id));
-
 
                 var lotes = evento.Lotes.Where(
                     lote => !idLotes.Contains(lote.Id)).ToArray();

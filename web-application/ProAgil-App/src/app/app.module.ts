@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMaskModule } from 'ngx-mask';
 import { ToastrModule } from 'ngx-toastr';
-
+import { NgxCurrencyModule } from 'ngx-currency';
 import { EventoService } from './_services/evento.service';
 
 import { AppComponent } from './app.component';
@@ -27,49 +27,50 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 
 
 @NgModule({
-  declarations: [
-     AppComponent,
-     NavComponent,
-     EventosComponent,
-     EventoEditComponent,
-     PalestrantesComponent,
-     DashboardComponent,
-     ContatosComponent,
-     TituloComponent,
-     UserComponent,
-     LoginComponent,
-     RegistrationComponent,
-     DateTimeFormatPipePipe
-  ],
-  imports: [
-     BrowserModule,
-     BsDropdownModule.forRoot(),
-     BsDatepickerModule.forRoot(),
-     TooltipModule.forRoot(),
-     ModalModule.forRoot(),
-     TabsModule.forRoot(),
-     NgxMaskModule.forRoot(),
-     BrowserAnimationsModule,
-     ToastrModule.forRoot({
-        timeOut: 3000,
-        preventDuplicates: true,
-        progressBar: true
-     }),
-     AppRoutingModule,
-     HttpClientModule,
-     FormsModule,
-     ReactiveFormsModule
-  ],
-  providers: [
-     EventoService,
-     {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptor,
-        multi: true
-     }
-  ],
-  bootstrap: [
-     AppComponent
-  ]
+   declarations: [
+      AppComponent,
+      NavComponent,
+      EventosComponent,
+      EventoEditComponent,
+      PalestrantesComponent,
+      DashboardComponent,
+      ContatosComponent,
+      TituloComponent,
+      UserComponent,
+      LoginComponent,
+      RegistrationComponent,
+      DateTimeFormatPipePipe
+   ],
+   imports: [
+      BrowserModule,
+      BsDropdownModule.forRoot(),
+      BsDatepickerModule.forRoot(),
+      TooltipModule.forRoot(),
+      ModalModule.forRoot(),
+      TabsModule.forRoot(),
+      NgxMaskModule.forRoot(),
+      NgxCurrencyModule,
+      BrowserAnimationsModule,
+      ToastrModule.forRoot({
+         timeOut: 3000,
+         preventDuplicates: true,
+         progressBar: true
+      }),
+      AppRoutingModule,
+      HttpClientModule,
+      FormsModule,
+      ReactiveFormsModule
+   ],
+   providers: [
+      EventoService,
+      {
+         provide: HTTP_INTERCEPTORS,
+         useClass: AuthInterceptor,
+         multi: true
+      }
+   ],
+   bootstrap: [
+      AppComponent
+   ]
 })
 export class AppModule { }
