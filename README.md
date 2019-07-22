@@ -21,10 +21,10 @@ Originalmente criado por Vinícius de Andrade "Seja Fullstack com Asp.NET Core 2
  </ul>
 
  <h4>Como usar</h4>
- <h5>Preparar Banco de dados</h5>
+ <h5>Preparar Banco de dados (ProAgil.Repository)</h5>
  <ul>
- <li>alterar connectionStrings do banco de dados appsettings.Developmente.json</li>
-  <li>executar migrations dentro do projeto ProAgil.Repository</li>
+ <li>alterar connectionStrings do banco de dados em appsettings.Development.json</li>
+  <li>realizar migrations</li>
   <li>dotnet ef --startup-project ..\ProAgil.WebAPI migrations add helloworld</li>
   <li>dotnet ef --startup-project ..\ProAgil.WebAPI database update<\li>
 </ul> 
