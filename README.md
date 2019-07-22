@@ -52,12 +52,15 @@ Originalmente criado por Vinícius de Andrade "Seja Fullstack com Asp.NET Core 2
  <h5>Login</h5>
  <p><a target="_blank" rel="noopener noreferrer" href="https://user-images.githubusercontent.com/22710963/61652753-14285880-ac8f-11e9-8806-b56b95f5fdd3.png">
  <img src="https://user-images.githubusercontent.com/22710963/61652753-14285880-ac8f-11e9-8806-b56b95f5fdd3.png" alt="reset" style="max-width:100%;"></a></p> 
- 
- 
+  
  <h5>Editar Evento</h5>
  <p><a target="_blank" rel="noopener noreferrer" href="https://user-images.githubusercontent.com/22710963/61652913-6c5f5a80-ac8f-11e9-9073-73fe8a1acd58.png">
  <img src="https://user-images.githubusercontent.com/22710963/61652913-6c5f5a80-ac8f-11e9-9073-73fe8a1acd58.png" alt="reset" style="max-width:100%;"></a></p> 
  
+ <h5>JWT</h5>
+  <p><a target="_blank" rel="noopener noreferrer" href="https://user-images.githubusercontent.com/22710963/61660050-66717580-ac9f-11e9-829d-af442dc7355b.png">
+ <img src="https://user-images.githubusercontent.com/22710963/61660050-66717580-ac9f-11e9-829d-af442dc7355b.png" alt="reset" style="max-width:100%;"></a></p> 
+
  
  <h4>Pacotes Angular instalados</h4>
   <ul>
