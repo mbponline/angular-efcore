@@ -24,6 +24,12 @@ npm i @auth0/angular-jwt
 Instalar Angular Guard
 ng g g auth/auth
 
+Instalar Tabs (https://valor-software.com/ngx-bootstrap/#/tabs)
+ng add ngx-bootstrap --component tabs
+
+Instalr Mask (https://www.npmjs.com/package/ngx-mask)
+npm install --save ngx-mask  
+
 Migrations
 executar dentro de Repository
 dotnet ef --startup-project ..\ProAgil.WebAPI\ migrations add initial

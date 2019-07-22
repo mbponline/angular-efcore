@@ -1,7 +1,6 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EventoService } from '../_services/evento.service';
 import { Evento } from '../_models/Evento';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { defineLocale, BsLocaleService, ptBrLocale } from 'ngx-bootstrap';
 defineLocale('pt-br', ptBrLocale);
@@ -18,7 +17,6 @@ export class EventosComponent implements OnInit {
 
   constructor(
     private eventoService: EventoService
-    , private modalService: BsModalService
     , private fb: FormBuilder
     , private localeService: BsLocaleService
     , private toastr: ToastrService
@@ -31,10 +29,10 @@ export class EventosComponent implements OnInit {
 
   evento: Evento;
   modoSalvar = 'post';
-  
+
   registerForm: FormGroup;
   bodyDeletarEvento = '';
-
+  dataEvento: string;
   // relacionados a imagens
   imagemLargura = 50;
   imagemMargem = 2;
@@ -70,7 +68,7 @@ export class EventosComponent implements OnInit {
   excluirEvento(evento: Evento, template: any) {
     this.openModal(template);
     this.evento = evento;
-    this.bodyDeletarEvento = `Tem certeza que deseja excluir o Evento: ${evento.tema}, Código: ${evento.id}`;
+    this.bodyDeletarEvento = `Tem certeza que deseja excluir o evento: ${evento.tema}, código: ${evento.id}`;
   }
 
   confirmeDelete(template: any) {
@@ -118,6 +116,7 @@ export class EventosComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]]
     });
   }
+
   onFileChange(event) {
     const reader = new FileReader();
     if (event.target.files && event.target.files.length) {
@@ -185,6 +184,8 @@ export class EventosComponent implements OnInit {
   }
 
   getEventos() {
+
+    this.dataAtual = new Date().getMilliseconds().toString();
     this.eventoService.getAllEvento().subscribe(
       (_eventos: Evento[]) => {
         this.eventos = _eventos;

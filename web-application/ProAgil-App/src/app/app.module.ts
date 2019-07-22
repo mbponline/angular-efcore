@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { NgxMaskModule } from 'ngx-mask';
 //ngx bootstrap
 import { TooltipModule, BsDropdownModule, ModalModule, BsDatepickerModule } from 'ngx-bootstrap';
 
@@ -18,14 +18,18 @@ import { PalestrantesComponent } from './palestrantes/palestrantes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ContatosComponent } from './contatos/contatos.component';
 import { TituloComponent } from './_shared/titulo/titulo.component';
+import { EventoEditComponent } from './eventos/eventoEdit/eventoEdit.component';
+import { UserComponent } from './user/user.component';
+import { LoginComponent } from './user/login/login.component';
+import { RegistrationComponent } from './user/registration/registration.component';
 
 import { EventoService } from './_services/evento.service';
 
 import { DateTimeFormatPipePipe } from './_helpers/DateTimeFormatPipe.pipe';
-import { UserComponent } from './user/user.component';
-import { LoginComponent } from './user/login/login.component';
-import { RegistrationComponent } from './user/registration/registration.component';
+
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+
 
 @NgModule({
   declarations: [
@@ -39,7 +43,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     TituloComponent,
     UserComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    EventoEditComponent
   ],
   imports: [
     BrowserModule,
@@ -54,9 +59,11 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 10000,
-      positionClass: 'toast-bottom-right',
+      progressBar: true,
       preventDuplicates: true
-    })
+    }),
+    NgxMaskModule.forRoot(),
+    TabsModule.forRoot()
   ],
   providers: [
     EventoService,

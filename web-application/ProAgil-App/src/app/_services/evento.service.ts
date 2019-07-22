@@ -26,7 +26,7 @@ export class EventoService {
   }
 
   getEventoById(id: number): Observable<Evento[]> {
-    return this.http.get<Evento[]>(`${this.baseURL}/getById/${id}`);
+    return this.http.get<Evento[]>(`${this.baseURL}/${id}`);
   }
 
   postUpload(file: File, name: string) {
