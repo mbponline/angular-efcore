@@ -6,8 +6,9 @@ import { BsDropdownModule, TooltipModule, ModalModule, BsDatepickerModule, TabsM
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMaskModule } from 'ngx-mask';
-import { ToastrModule } from 'ngx-toastr';
 import { NgxCurrencyModule } from 'ngx-currency';
+import { ToastrModule } from 'ngx-toastr';
+
 import { EventoService } from './_services/evento.service';
 
 import { AppComponent } from './app.component';

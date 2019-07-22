@@ -57,8 +57,7 @@
           <input class="form-control" type="password" formControlName="confirmPassword" [ngClass]="{ 'is-invalid': registerForm.get('passwords.confirmPassword').errors 
                            && registerForm.get('passwords.confirmPassword').touched 
                            ||registerForm.get('passwords.confirmPassword').hasError('mismatch') 
-                           && registerForm.get('passwords.confirmPassword').touched }"
-            placeholder="Confirme a Senha" />
+                         && registerForm.get('passwords.confirmPassword').touched }" placeholder="Confirme a Senha" />
           <div *ngIf="registerForm.get('passwords.confirmPassword').hasError('required') &&
                         registerForm.get('passwords.confirmPassword').touched" class="invalid-feedback">
             Confirme a Senha

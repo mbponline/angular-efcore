@@ -15,11 +15,10 @@ export class RegistrationComponent implements OnInit {
   registerForm: FormGroup;
   user: User;
 
-  constructor(
-    private authService: AuthService,
-    public router: Router,
-    public fb: FormBuilder,
-    private toastr: ToastrService) {
+  constructor(private authService: AuthService
+    , public router: Router
+    , public fb: FormBuilder
+    , private toastr: ToastrService) {
   }
 
   ngOnInit() {
