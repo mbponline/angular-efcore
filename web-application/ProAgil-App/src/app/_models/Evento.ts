@@ -17,5 +17,4 @@ export class Evento {
     lotes: Lote[];
     redesSociais: RedeSocial[];
     palestrantesEventos: Palestrante[];
-
 }
