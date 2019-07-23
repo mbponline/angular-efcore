@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProAgil.Domain.identity;
-using ProAgil.Repository; 
+using ProAgil.Repository;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProAgil.WebAPI
 {
@@ -84,6 +86,24 @@ namespace ProAgil.WebAPI
             //Injetar Dependecias
             services.AddScoped<IProAgilRepository, ProAgilRepository>();
             services.AddAutoMapper();
+            services.AddSwaggerGen(
+                c =>
+                {
+                    c.SwaggerDoc("v1", new Info { Title = "Swagger Doc", Version = "v1" });
+                    c.AddSecurityDefinition("Bearer",
+               new ApiKeyScheme
+               {
+                   In = "header",
+                   Description = "Por favor coloque o valor 'Bearer' seguido de um espaço em branco e depois o valor do token no formato JWT!",
+                   Name = "Authorization",
+                   Type = "apiKey"
+               });
+                    c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                { "Bearer", Enumerable.Empty<string>() },
+            });
+                }
+              );
+
             services.AddCors();
 
         }
@@ -112,6 +132,16 @@ namespace ProAgil.WebAPI
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
                 RequestPath = new PathString("/Resources")
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+            app.UseRewriter(option);
+
             app.UseMvc();
         }
     }

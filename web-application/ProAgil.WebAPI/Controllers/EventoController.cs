@@ -9,9 +9,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Linq;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProAgil.WebAPI.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController] //post dados são esperados no body da requisição
     public class EventoController : ControllerBase
@@ -27,6 +29,7 @@ namespace ProAgil.WebAPI.Controllers
 
         //GET
         [HttpGet]
+        
         public async Task<IActionResult> Get()
         {
             try
@@ -60,16 +63,13 @@ namespace ProAgil.WebAPI.Controllers
                     {
                         file.CopyTo(stream);
                     }
-
                 }
                 return Ok();
 
             }
             catch (System.Exception ex)
             {
-
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro upload imagem {ex.Message}");
-
             }
         }
 
