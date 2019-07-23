@@ -79,7 +79,7 @@ namespace ProAgil.Repository
 
             return await query.ToArrayAsync();
         }
-        public async Task<Evento> GetEventoAsyncById(int EventoId, bool includePalestrantes)
+        public async Task<Evento> GetEventoAsyncById(int eventoId, bool includePalestrantes)
         {
             IQueryable<Evento> query = _context.Eventos
                 .Include(c => c.Lotes)
@@ -95,13 +95,13 @@ namespace ProAgil.Repository
             //não travar recurso para retornar consulta
             query = query.AsNoTracking()
                         .OrderBy(c => c.Id)
-                        .Where(c => c.Id == EventoId);
+                        .Where(c => c.Id == eventoId);
 
             return await query.FirstOrDefaultAsync();
         }
 
         //PALESTRANTE
-        public async Task<Palestrante> GetPalestranteAsync(int PalestranteId, bool includeEventos = false)
+        public async Task<Palestrante> GetPalestranteAsyncById(int palestranteId, bool includeEventos = false)
         {
             IQueryable<Palestrante> query = _context.Palestrantes
                 .Include(c => c.RedesSociais);
@@ -116,7 +116,7 @@ namespace ProAgil.Repository
             //não travar recurso para retornar consulta
             query = query.AsNoTracking()
                     .OrderBy(p => p.Nome)
-                    .Where(p => p.Id == PalestranteId);
+                    .Where(p => p.Id == palestranteId);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -138,5 +138,90 @@ namespace ProAgil.Repository
 
             return await query.ToArrayAsync();
         }
+        public async Task<Palestrante[]> GetAllPalestrantesAsync(bool includeEventos = false)
+        {
+            IQueryable<Palestrante> query = _context.Palestrantes
+              .Include(c => c.RedesSociais);
+
+            if (includeEventos)
+            {
+                query = query
+                    .Include(pe => pe.PalestrantesEventos)
+                    .ThenInclude(e => e.Evento);
+            }
+
+            //não travar recurso para retornar consulta
+            query = query.AsNoTracking()
+                        .OrderBy(c => c.Id);
+
+            return await query.ToArrayAsync();
+        }
+
+        // LOTE
+        public async Task<Lote> GetLoteAsyncById(int loteId)
+        {
+            IQueryable<Lote> query = _context.Lotes;
+
+            //não travar recurso para retornar consulta
+            query = query.AsNoTracking()
+                    .Where(p => p.Id == loteId);
+
+            return await query.FirstOrDefaultAsync();
+        }
+        public async Task<Lote[]> GetAllLotesAsyncByName(string name)
+        {
+            IQueryable<Lote> query = _context.Lotes;
+
+            //não travar recurso para retornar consulta
+            query = query.AsNoTracking()
+                        .Where(p => p.Nome.ToLower().Contains(name.ToLower()));
+
+            return await query.ToArrayAsync();
+        }
+        public async Task<Lote[]> GetAllLotesAsync()
+        {
+            IQueryable<Lote> query = _context.Lotes;
+
+            //não travar recurso para retornar consulta
+            query = query.AsNoTracking()
+                        .OrderBy(c => c.Id);
+
+            return await query.ToArrayAsync();
+        }
+
+        // REDE SOCIAL
+        public async Task<RedeSocial> GetRedeSocialAsyncById(int redeSocialId)
+        {
+            IQueryable<RedeSocial> query = _context.RedeSociais;
+
+            //não travar recurso para retornar consulta
+            query = query.AsNoTracking()
+                    .Where(p => p.Id == redeSocialId);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<RedeSocial[]> GetAllRedesSociaisAsyncByName(string name)
+        {
+            IQueryable<RedeSocial> query = _context.RedeSociais;
+
+            //não travar recurso para retornar consulta
+            query = query.AsNoTracking()
+                        .Where(p => p.Nome.ToLower().Contains(name.ToLower()));
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<RedeSocial[]> GetAllRedesSociaisAsync()
+        {
+            IQueryable<RedeSocial> query = _context.RedeSociais;
+
+            //não travar recurso para retornar consulta
+            query = query.AsNoTracking()
+                        .OrderBy(c => c.Id);
+
+            return await query.ToArrayAsync();
+        }
+
     }
 }

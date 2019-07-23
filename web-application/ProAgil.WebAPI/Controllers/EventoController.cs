@@ -9,11 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Linq;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProAgil.WebAPI.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController] //post dados são esperados no body da requisição
     public class EventoController : ControllerBase
@@ -29,11 +28,9 @@ namespace ProAgil.WebAPI.Controllers
 
         //GET
         [HttpGet]
-        
         public async Task<IActionResult> Get()
         {
             try
-
             {
                 var eventos = await _repository.GetAllEventoAsync(true);
                 var result = _mapper.Map<IEnumerable<EventoDto>>(eventos);
@@ -73,12 +70,12 @@ namespace ProAgil.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{EventoId}")]
-        public async Task<IActionResult> Get(int EventoId)
+        [HttpGet("{eventoId}")]
+        public async Task<IActionResult> Get(int eventoId)
         {
             try
             {
-                var evento = await _repository.GetEventoAsyncById(EventoId, true);
+                var evento = await _repository.GetEventoAsyncById(eventoId, true);
                 var result = _mapper.Map<EventoDto>(evento);
                 return Ok(result);
             }
@@ -88,12 +85,12 @@ namespace ProAgil.WebAPI.Controllers
             }
         }
 
-        [HttpGet("getByTema/{tema}")]
-        public async Task<IActionResult> Get(string tema)
+        [HttpGet("getByTema/{eventoTema}")]
+        public async Task<IActionResult> Get(string eventoTema)
         {
             try
             {
-                var evento = await _repository.GetAllEventoAsyncByTema(tema, true);
+                var evento = await _repository.GetAllEventoAsyncByTema(eventoTema, true);
                 var result = _mapper.Map<IEnumerable<EventoDto>>(evento);
                 return Ok(result);
             }
@@ -124,12 +121,12 @@ namespace ProAgil.WebAPI.Controllers
         }
 
         //PUT
-        [HttpPut("{EventoId}")]
-        public async Task<IActionResult> Put(int EventoId, EventoDto model)
+        [HttpPut("{eventoId}")]
+        public async Task<IActionResult> Put(int eventoId, EventoDto model)
         {
             try
             {
-                var evento = await _repository.GetEventoAsyncById(EventoId, false);
+                var evento = await _repository.GetEventoAsyncById(eventoId, false);
                 if (evento == null) return NotFound();
 
                 var idLotes = new List<int>();
@@ -164,12 +161,12 @@ namespace ProAgil.WebAPI.Controllers
         }
 
         //DELETE
-        [HttpDelete("{EventoId}")]
-        public async Task<IActionResult> Delete(int EventoId)
+        [HttpDelete("{eventoId}")]
+        public async Task<IActionResult> Delete(int eventoId)
         {
             try
             {
-                var evento = await _repository.GetEventoAsyncById(EventoId, false);
+                var evento = await _repository.GetEventoAsyncById(eventoId, false);
                 if (evento == null) return NotFound();
                 _repository.Delete(evento);
                 if (await _repository.SaveChangesAsync())
@@ -183,6 +180,5 @@ namespace ProAgil.WebAPI.Controllers
             }
             return BadRequest();
         }
-
     }
 }
