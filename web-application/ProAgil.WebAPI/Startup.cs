@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,8 +19,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using ProAgil.Domain.identity;
 using ProAgil.Repository;
-using ProAgil.WebAPI.Helpers;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Swashbuckle.AspNetCore.Swagger;
+using ProAgil.WebAPI.Helpers;
 
 namespace ProAgil.WebAPI
 {
@@ -81,10 +82,34 @@ namespace ProAgil.WebAPI
             //Injetar Dependecias
             services.AddScoped<IProAgilRepository, ProAgilRepository>();
             services.AddAutoMapper();
+            services.AddApiVersioning(options =>
+            {
+                options.UseApiBehavior = false;
+                // assume valor padrão se não específicado
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(majorVersion: 2, minorVersion: 0);
+                // pode ser usado para criar diferentes versões de métodos API sem ter que criar outra URL
+                // bastando adicionar no header da requisição o key abaixo e valor definido no método
+                options.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                // informa no cabeçalho se versão está obsoleta
+                options.ReportApiVersions = true;
+                //   options.ApiVersionReader = new  ApiVersionHeader("");
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                // v -> versão VV -> major e minor version V -> Path Url
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+
+            });
+
             services.AddSwaggerGen(
                 c =>
                 {
-                    c.SwaggerDoc("v1", new Info { Title = "Swagger Doc", Version = "v1" });
+                    c.SwaggerDoc("v1", new Info { Title = "Swagger Doc", Version = "v1", Contact = new Contact { Name = "contoso1", Email = "contoso1@contoso.com.br", Url = "https://contoso.com.br/" } });
+                    c.SwaggerDoc("v2", new Info { Title = "Swagger Doc", Version = "v2", Contact = new Contact { Name = "contoso2", Email = "contoso2@contoso.com.br", Url = "https://contoso.com.br/" } });
+
                     c.AddSecurityDefinition("Bearer", new ApiKeyScheme
                     {
                         In = "header",
@@ -93,6 +118,7 @@ namespace ProAgil.WebAPI
                         Type = "apiKey"
                     });
                     c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> { { "Bearer", Enumerable.Empty<string>() } }); // permite chamadas aos métodos que exigem autenticação JWT
+
                     c.DocumentFilter<SwaggerExcludeFilter>(); // para ocultar models DTO na tela pricipal add o nome da model dentro da classe.
                 });
 
@@ -103,20 +129,35 @@ namespace ProAgil.WebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1.0");
+                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2.0");
+
+                }
+                );
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+            app.UseRewriter(option);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //permite compartilhamento de recursos cruzados para toda origem, todos os métodos e todos os cabeçalhos
+                app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             }
             else
             {
+                //permite compartilhamento de recursos cruzados para toda origem, todos os métodos e todos os cabeçalhos
+                app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                 app.UseHsts();
             }
 
             app.UseAuthentication();
 
             // app.UseHttpsRedirection(); desabilitado https temporariamente
-            //permite compartilhamento de recursos cruzados para toda origem, todos os métodos e todos os cabeçalhos
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             app.UseStaticFiles(); //acessar imagens no diretorio raiz
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -124,11 +165,9 @@ namespace ProAgil.WebAPI
                 RequestPath = new PathString("/Resources")
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
-            var option = new RewriteOptions();
-            option.AddRedirect("^$", "swagger");
-            app.UseRewriter(option);
+
+
+
 
             app.UseMvc();
         }

@@ -10,11 +10,11 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Linq;
 
-namespace ProAgil.WebAPI.Controllers
-{
-
-    [Route("api/[controller]")]
-    [ApiController] //post dados são esperados no body da requisição
+namespace ProAgil.WebAPI.v1.Controllers{
+    
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiController]
     public class EventoController : ControllerBase
     {
         private readonly IProAgilRepository _repository;

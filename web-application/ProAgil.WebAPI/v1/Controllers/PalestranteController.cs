@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -9,14 +10,16 @@ using ProAgil.WebAPI.Dtos;
 
 namespace ProAgil.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class LoteController : ControllerBase
+    public class PalestranteController : ControllerBase
     {
         private readonly IProAgilRepository _repository;
+
         private readonly IMapper _mapper;
 
-        public LoteController(IProAgilRepository repository, IMapper mapper)
+        public PalestranteController(IProAgilRepository repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;
@@ -27,8 +30,8 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var lotes = await _repository.GetAllLotesAsync();
-                var result = _mapper.Map<IEnumerable<LoteDto>>(lotes);
+                var palestrantes = await _repository.GetAllPalestrantesAsync(true);
+                var result = _mapper.Map<IEnumerable<PalestranteDto>>(palestrantes);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -37,13 +40,13 @@ namespace ProAgil.WebAPI.Controllers
             }
         }
 
-        [HttpGet("{loteId}")]
-        public async Task<IActionResult> Get(int loteId)
+        [HttpGet("{palestranteId}")]
+        public async Task<IActionResult> Get(int palestranteId)
         {
             try
             {
-                var lote = await _repository.GetLoteAsyncById(loteId);
-                var result = _mapper.Map<LoteDto>(lote);
+                var palestrante = await _repository.GetPalestranteAsyncById(palestranteId, true);
+                var result = _mapper.Map<PalestranteDto>(palestrante);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -52,14 +55,13 @@ namespace ProAgil.WebAPI.Controllers
             }
         }
 
-
-        [HttpGet("getByNomeLote/{loteName}")]
-        public async Task<IActionResult> Get(string loteName)
+        [HttpGet("getByName/{palestranteNome}")]
+        public async Task<IActionResult> Get(string palestranteNome)
         {
             try
             {
-                var lotes = await _repository.GetAllLotesAsyncByName(loteName);
-                var result = _mapper.Map<IEnumerable<LoteDto>>(lotes);
+                var palestrante = await _repository.GetAllPalestrantesAsyncByName(palestranteNome, true);
+                var result = _mapper.Map<PalestranteDto>(palestrante);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -69,15 +71,15 @@ namespace ProAgil.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(LoteDto model)
+        public async Task<IActionResult> Post(PalestranteDto model)
         {
             try
             {
-                var lote = _mapper.Map<Lote>(model);
-                _repository.Add(lote);
+                var palestrante = _mapper.Map<Palestrante>(model);
+                _repository.Add(palestrante);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return Created($"/api/lote/{lote.Id}", _mapper.Map<LoteDto>(lote));
+                    return Created($"/api/palestrante/{palestrante.Id}", _mapper.Map<PalestranteDto>(palestrante));
                 }
             }
             catch (System.Exception ex)
@@ -87,21 +89,30 @@ namespace ProAgil.WebAPI.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{loteId}")]
-        public async Task<IActionResult> Put(int loteId, LoteDto model)
+        [HttpPut("{palestranteId}")]
+        public async Task<IActionResult> Put(int palestranteId, PalestranteDto model)
         {
             try
             {
-                var lote = await _repository.GetLoteAsyncById(loteId);
-                if (lote == null) return NotFound();
+                var palestrante = await _repository.GetPalestranteAsyncById(palestranteId, false);
+                if (palestrante == null) return NotFound();
 
-                _mapper.Map(model, lote);
+                var idRedesSociais = new List<int>();
+                model.RedesSociais.ForEach(item => idRedesSociais.Add(item.Id));
 
-                _repository.Update(lote);
+                var redesSociais = palestrante.RedesSociais.Where(
+                    rede => !idRedesSociais.Contains(rede.Id)).ToArray();
+
+                if (redesSociais.Length > 0) _repository.Delete(redesSociais);
+
+                _mapper.Map(model, palestrante);
+
+                _repository.Update(palestrante);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return Created($"/api/lote/{model.Id}", _mapper.Map<LoteDto>(model));
+                    return Created($"/api/palestrante/{model.Id}", _mapper.Map<PalestranteDto>(model));
                 }
+
             }
             catch (System.Exception ex)
             {
@@ -110,15 +121,15 @@ namespace ProAgil.WebAPI.Controllers
             return BadRequest();
         }
 
-        //DELETE
-        [HttpDelete("{loteId}")]
-        public async Task<IActionResult> Delete(int loteId)
+        [HttpDelete("{palestranteId}")]
+        public async Task<IActionResult> Delete(int palestranteId)
         {
+
             try
             {
-                var lote = await _repository.GetLoteAsyncById(loteId);
-                if (lote == null) return NotFound();
-                _repository.Delete(lote);
+                var palestrante = await _repository.GetPalestranteAsyncById(palestranteId, false);
+                if (palestrante == null) return NotFound();
+                _repository.Delete(palestrante);
                 if (await _repository.SaveChangesAsync())
                 {
                     return Ok();
@@ -127,9 +138,9 @@ namespace ProAgil.WebAPI.Controllers
             catch (System.Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Banco de dados falhou {ex.Message}");
+
             }
             return BadRequest();
         }
-
     }
 }
