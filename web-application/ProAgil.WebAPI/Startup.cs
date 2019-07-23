@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -19,11 +16,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProAgil.Domain.identity;
 using ProAgil.Repository;
+using ProAgil.WebAPI.Helpers;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProAgil.WebAPI
@@ -42,7 +38,6 @@ namespace ProAgil.WebAPI
         {
             var migrationAssembly = "ProAgil.Repository"; // typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddDbContext<ProAgilContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql => sql.MigrationsAssembly(migrationAssembly)));
-
 
             IdentityBuilder builder = services.AddIdentityCore<User>(options =>
             {
@@ -90,19 +85,16 @@ namespace ProAgil.WebAPI
                 c =>
                 {
                     c.SwaggerDoc("v1", new Info { Title = "Swagger Doc", Version = "v1" });
-                    c.AddSecurityDefinition("Bearer",
-               new ApiKeyScheme
-               {
-                   In = "header",
-                   Description = "Por favor coloque o valor 'Bearer' seguido de um espaço em branco e depois o valor do token no formato JWT!",
-                   Name = "Authorization",
-                   Type = "apiKey"
-               });
-                    c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
-                { "Bearer", Enumerable.Empty<string>() },
-            });
-                }
-              );
+                    c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Por favor coloque o valor 'Bearer' seguido de um espaço em branco e depois o valor do token no formato JWT!",
+                        Name = "Authorization",
+                        Type = "apiKey"
+                    });
+                    c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> { { "Bearer", Enumerable.Empty<string>() } }); // permite chamadas aos métodos que exigem autenticação JWT
+                    c.DocumentFilter<SwaggerExcludeFilter>(); // para ocultar models DTO na tela pricipal add o nome da model dentro da classe.
+                });
 
             services.AddCors();
 
@@ -117,7 +109,6 @@ namespace ProAgil.WebAPI
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -134,15 +125,14 @@ namespace ProAgil.WebAPI
             });
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
             var option = new RewriteOptions();
             option.AddRedirect("^$", "swagger");
             app.UseRewriter(option);
 
             app.UseMvc();
         }
+
     }
+
 }

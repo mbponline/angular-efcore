@@ -11,11 +11,11 @@ namespace ProAgil.WebAPI.Dtos
         public string Nome { get; set; }
         [Required]
         public decimal Preco { get; set; }
-          [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public string DataInicio { get; set; }
-         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public string DataFim { get; set; }
 
         [Range(2, 120000)]
