@@ -22,6 +22,8 @@ using ProAgil.Repository;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Swashbuckle.AspNetCore.Swagger;
 using ProAgil.WebAPI.Helpers;
+using Microsoft.OpenApi.Models;
+using System;
 
 namespace ProAgil.WebAPI
 {
@@ -48,7 +50,7 @@ namespace ProAgil.WebAPI
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 4;
             });
-
+https://docs.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-2.2&tabs=visual-studio-code
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<ProAgilContext>();
             builder.AddRoleValidator<RoleValidator<Role>>();
@@ -107,15 +109,32 @@ namespace ProAgil.WebAPI
             services.AddSwaggerGen(
                 c =>
                 {
-                    c.SwaggerDoc("v1", new Info { Title = "Swagger Doc", Version = "v1", Contact = new Contact { Name = "contoso1", Email = "contoso1@contoso.com.br", Url = "https://contoso.com.br/" } });
-                    c.SwaggerDoc("v2", new Info { Title = "Swagger Doc", Version = "v2", Contact = new Contact { Name = "contoso2", Email = "contoso2@contoso.com.br", Url = "https://contoso.com.br/" } });
-
-                    c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger Doc", Version = "v1", Contact = new OpenApiContact { Name = "contoso1", Email = "contoso1@contoso.com.br", Url = "https://contoso.com.br/" } });
+                    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Swagger Doc", Version = "v2", Contact = new OpenApiContact { Name = "contoso2", Email = "contoso2@contoso.com.br", Url = "https://contoso.com.br/" } });
+                    c.SwaggerDoc("v1", new OpenApiInfo
                     {
-                        In = "header",
+                        Version = "v1",
+                        Title = "ToDo API",
+                        Description = "A simple example ASP.NET Core Web API",
+                        TermsOfService = new Uri("https://example.com/terms"),
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Shayne Boyer",
+                            Email = string.Empty,
+                            Url = new Uri("https://twitter.com/spboyer"),
+                        },
+                        License = new OpenApiLicense
+                        {
+                            Name = "Use under LICX",
+                            Url = new Uri("https://example.com/license"),
+                        }
+                    });
+                    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                    {
+                        In = ParameterLocation.Header,
                         Description = "Por favor coloque o valor 'Bearer' seguido de um espaço em branco e depois o valor do token no formato JWT!",
                         Name = "Authorization",
-                        Type = "apiKey"
+                        Type = SecuritySchemeType.ApiKey
                     });
                     c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> { { "Bearer", Enumerable.Empty<string>() } }); // permite chamadas aos métodos que exigem autenticação JWT
 
@@ -133,6 +152,7 @@ namespace ProAgil.WebAPI
             app.UseSwaggerUI(
                 c =>
                 {
+                    c.RoutePrefix = string.Empty;
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1.0");
                     c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2.0");
 
