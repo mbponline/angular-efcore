@@ -50,7 +50,6 @@ namespace ProAgil.WebAPI
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 4;
             });
-https://docs.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swashbuckle?view=aspnetcore-2.2&tabs=visual-studio-code
             builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
             builder.AddEntityFrameworkStores<ProAgilContext>();
             builder.AddRoleValidator<RoleValidator<Role>>();
@@ -109,12 +108,28 @@ https://docs.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swas
             services.AddSwaggerGen(
                 c =>
                 {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger Doc", Version = "v1", Contact = new OpenApiContact { Name = "contoso1", Email = "contoso1@contoso.com.br", Url = "https://contoso.com.br/" } });
-                    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Swagger Doc", Version = "v2", Contact = new OpenApiContact { Name = "contoso2", Email = "contoso2@contoso.com.br", Url = "https://contoso.com.br/" } });
                     c.SwaggerDoc("v1", new OpenApiInfo
                     {
                         Version = "v1",
-                        Title = "ToDo API",
+                        Title = "Documentação API Eventos Swagger",
+                        Description = "A simple example ASP.NET Core Web API",
+                        TermsOfService = new Uri("https://example.com/terms"),
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Shayne Boyer",
+                            Email = string.Empty,
+                            Url = new Uri("https://twitter.com/spboyer"),
+                        },
+                        License = new OpenApiLicense
+                        {
+                            Name = "Use under LICX",
+                            Url = new Uri("https://example.com/license"),
+                        }
+                    });
+                    c.SwaggerDoc("v2", new OpenApiInfo
+                    {
+                        Version = "v2",
+                        Title = "Documentação API Eventos Swagger",
                         Description = "A simple example ASP.NET Core Web API",
                         TermsOfService = new Uri("https://example.com/terms"),
                         Contact = new OpenApiContact
@@ -136,9 +151,9 @@ https://docs.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swas
                         Name = "Authorization",
                         Type = SecuritySchemeType.ApiKey
                     });
-                    c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> { { "Bearer", Enumerable.Empty<string>() } }); // permite chamadas aos métodos que exigem autenticação JWT
 
-                    c.DocumentFilter<SwaggerExcludeFilter>(); // para ocultar models DTO na tela pricipal add o nome da model dentro da classe.
+                   c.AddSecurityRequirement( new OpenApiSecurityRequirement { { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } } } );
+                    //  c.DocumentFilter<SwaggerExcludeFilter>(); // para ocultar models DTO na tela pricipal add o nome da model dentro da classe.
                 });
 
             services.AddCors();
@@ -148,19 +163,7 @@ https://docs.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swas
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(
-                c =>
-                {
-                    c.RoutePrefix = string.Empty;
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1.0");
-                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2.0");
 
-                }
-                );
-            var option = new RewriteOptions();
-            option.AddRedirect("^$", "swagger");
-            app.UseRewriter(option);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -173,9 +176,6 @@ https://docs.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swas
                 app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                 app.UseHsts();
             }
-
-            app.UseAuthentication();
-
             // app.UseHttpsRedirection(); desabilitado https temporariamente
 
             app.UseStaticFiles(); //acessar imagens no diretorio raiz
@@ -185,9 +185,19 @@ https://docs.microsoft.com/pt-br/aspnet/core/tutorials/getting-started-with-swas
                 RequestPath = new PathString("/Resources")
             });
 
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1.0");
+                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2.0");
 
-
-
+                }
+                );
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+            app.UseRewriter(option);
+            app.UseAuthentication();
 
             app.UseMvc();
         }

@@ -10,8 +10,10 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Linq;
 
-namespace ProAgil.WebAPI.v1.Controllers{
-    
+namespace ProAgil.WebAPI.v1.Controllers
+{
+
+    [Produces("application/json")]
     [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -26,8 +28,27 @@ namespace ProAgil.WebAPI.v1.Controllers{
             _repository = repository;
         }
 
-        //GET
+        /// <summary>
+        /// Creates a TodoItem.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Todo
+        ///     {
+        ///        "id": 1,
+        ///        "name": "Item1",
+        ///        "isComplete": true
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="item"></param>
+        /// <returns>A newly created TodoItem</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>   
         [HttpGet]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Get()
         {
             try
