@@ -14,10 +14,10 @@ namespace ProAgil.WebAPI.Controllers
     [ApiController]
     public class RedeSocialController : ControllerBase
     {
-        private readonly IProAgilRepository _repository;
+        private readonly IProAgilRepository<RedeSocial> _repository;
         private readonly IMapper _mapper;
 
-        public RedeSocialController(IProAgilRepository repository, IMapper mapper)
+        public RedeSocialController(IProAgilRepository<RedeSocial> repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;
@@ -28,7 +28,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var redesSociais = await _repository.GetAllRedesSociaisAsync();
+                var redesSociais = await _repository.GetAllAsync();
                 var result = _mapper.Map<IEnumerable<RedeSocialDto>>(redesSociais);
                 return Ok(result);
             }
@@ -43,7 +43,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var redeSocial = await _repository.GetRedeSocialAsyncById(redeSocialId);
+                var redeSocial = await _repository.GetByIdAsync(redeSocialId);
                 var result = _mapper.Map<RedeSocialDto>(redeSocial);
                 return Ok(result);
             }
@@ -59,7 +59,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var redesSociais = await _repository.GetAllRedesSociaisAsyncByName(redeSocialName);
+                var redesSociais = await _repository.GetAllByNameAsync(redeSocialName);
                 var result = _mapper.Map<IEnumerable<RedeSocialDto>>(redesSociais);
                 return Ok(result);
             }
@@ -76,7 +76,7 @@ namespace ProAgil.WebAPI.Controllers
             {
                 var redeSocial = _mapper.Map<RedeSocial>(model);
                 _repository.Add(redeSocial);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/redeSocial/{redeSocial.Id}", _mapper.Map<RedeSocialDto>(redeSocial));
                 }
@@ -93,13 +93,13 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var redeSocial = await _repository.GetRedeSocialAsyncById(redeSocialId);
+                var redeSocial = await _repository.GetByIdAsync(redeSocialId);
                 if (redeSocial == null) return NotFound();
 
                 _mapper.Map(model, redeSocial);
 
                 _repository.Update(redeSocial);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/redeSocial/{model.Id}", _mapper.Map<RedeSocialDto>(model));
                 }
@@ -117,10 +117,10 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var redeSocial = await _repository.GetRedeSocialAsyncById(redeSocialId);
+                var redeSocial = await _repository.GetByIdAsync(redeSocialId);
                 if (redeSocial == null) return NotFound();
-                _repository.Delete(redeSocial);
-                if (await _repository.SaveChangesAsync())
+                _repository.Remove(redeSocial.Id);
+                if (await _repository.SaveChanges())
                 {
                     return Ok();
                 }

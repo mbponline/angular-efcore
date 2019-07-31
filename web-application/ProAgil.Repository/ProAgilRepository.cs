@@ -1,227 +1,92 @@
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProAgil.Domain;
 
 namespace ProAgil.Repository
 {
-    public class ProAgilRepository : IProAgilRepository
+    public class ProAgilRepository<T> : IProAgilRepository<T> where T : class
     {
         private readonly ProAgilContext _context;
-
+        private readonly DbSet<T> _entity;
         public ProAgilRepository(ProAgilContext context)
         {
             _context = context;
+            _entity = _context.Set<T>();
             // desabilita globalmente mecanismo de rastreamento do entity framework que trava (tracking) recurso enquanto está em uso
-            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            //  _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        }
+        public void Add(T entity)
+        {
+            _entity.Add(entity);
         }
 
-        //GERAIS
-        public void Add<T>(T entity) where T : class
+        public void Update(T entity)
         {
-            _context.Add(entity);
+            _entity.Update(entity);
         }
-        public void Update<T>(T entity) where T : class
+
+        public async void Remove(int id)
         {
-            _context.Update(entity);
+            _entity.Remove(await _entity.FindAsync(id));
         }
-        public void Delete<T>(T entity) where T : class
+        public async void Remove(params object[] keyValues)
         {
-            _context.Remove(entity);
+            _entity.Remove(await _entity.FindAsync(keyValues));
         }
-        public void DeleteRange<T>(T[] entityArray) where T : class
+
+        public void Dispose()
         {
-            _context.RemoveRange(entityArray);
+            _context.Dispose();
+            GC.SuppressFinalize(this);
         }
-        public async Task<bool> SaveChangesAsync()
+
+        public async Task<bool> SaveChanges()
         {
             return (await _context.SaveChangesAsync()) > 0;
         }
 
-        //EVENTO
-        public async Task<Evento[]> GetAllEventoAsync(bool includePalestrantes = false)
+        public async Task<int> GetMax(Expression<Func<T, int>> select)
         {
-            // resposta dos eventos com os lotes e as redes sociais
-            IQueryable<Evento> query = _context.Eventos
-                .Include(c => c.Lotes)
-                .Include(c => c.RedesSociais);
-            // inclui os palestrantes do evento se for solicitado
-            // opção para economia de recursos: lotes e redessociais poderiam ser feitos assim também
-            if (includePalestrantes)
-            { //referencia muitos para muitos 
-                query = query
-                    .Include(pe => pe.PalestrantesEventos)
-                    .ThenInclude(p => p.Palestrante);
-            }
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                .OrderBy(c => c.Id);
-
-            return await query.ToArrayAsync();
+            return await _entity.Select(select).MaxAsync();
         }
-        public async Task<Evento[]> GetAllEventoAsyncByTema(string tema, bool includePalestrantes)
-        {
-            IQueryable<Evento> query = _context.Eventos
-                .Include(c => c.Lotes)
-                .Include(c => c.RedesSociais);
 
-            if (includePalestrantes)
+        public async Task<int> GetMin(Expression<Func<T, int>> select)
+        {
+            return await _entity.Select(select).MinAsync();
+        }
+
+        public async Task<bool> Exists(int id)
+        {
+            return await _entity.AnyAsync<T>();
+        }
+
+        public async Task<T> GetByIdAsync(int id)
+        {
+            return await _entity.FindAsync(id);
+        }
+
+        public async Task<T[]> GetAllAsync()
+        {
+            return await _entity.ToArrayAsync();
+        }
+
+        public Task<T[]> GetAllByNameAsync(string name)
+        {
+            //testar se nome da coluna existe filtrar os campos por elas.
+            var result = _entity.FromSql("IF EXISTS( SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE UPPER(TABLE_NAME) = UPPER(Eventos" +
+               ")  AND  UPPER(COLUMN_NAME) IN ( 'NOME', 'TEMA'))");
+
+            if (result.Any())
             {
-                query = query
-                    .Include(pe => pe.PalestrantesEventos)
-                    .ThenInclude(p => p.Palestrante);
+                return null;
             }
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .OrderByDescending(c => c.DataEvento)
-                        .Where(c => c.Tema.ToLower().Contains(tema.ToLower()));
-
-            return await query.ToArrayAsync();
-        }
-        public async Task<Evento> GetEventoAsyncById(int eventoId, bool includePalestrantes)
-        {
-            IQueryable<Evento> query = _context.Eventos
-                .Include(c => c.Lotes)
-                .Include(c => c.RedesSociais);
-
-            if (includePalestrantes)
-            {
-                query = query
-                    .Include(pe => pe.PalestrantesEventos)
-                    .ThenInclude(p => p.Palestrante);
-            }
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .OrderBy(c => c.Id)
-                        .Where(c => c.Id == eventoId);
-
-            return await query.FirstOrDefaultAsync();
+             return null;
+            //return await _entity.Where(p => p.Nome.ToLower().Contains(name.ToLower())).ToArrayAsync();
         }
 
-        //PALESTRANTE
-        public async Task<Palestrante> GetPalestranteAsyncById(int palestranteId, bool includeEventos = false)
-        {
-            IQueryable<Palestrante> query = _context.Palestrantes
-                .Include(c => c.RedesSociais);
-
-            if (includeEventos)
-            {
-                query = query
-                    .Include(pe => pe.PalestrantesEventos)
-                    .ThenInclude(e => e.Evento);
-            }
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                    .OrderBy(p => p.Nome)
-                    .Where(p => p.Id == palestranteId);
-
-            return await query.FirstOrDefaultAsync();
-        }
-        public async Task<Palestrante[]> GetAllPalestrantesAsyncByName(string name, bool includeEventos = false)
-        {
-            IQueryable<Palestrante> query = _context.Palestrantes
-                .Include(c => c.RedesSociais);
-
-            if (includeEventos)
-            {
-                query = query
-                    .Include(pe => pe.PalestrantesEventos)
-                    .ThenInclude(e => e.Evento);
-            }
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .Where(p => p.Nome.ToLower().Contains(name.ToLower()));
-
-            return await query.ToArrayAsync();
-        }
-        public async Task<Palestrante[]> GetAllPalestrantesAsync(bool includeEventos = false)
-        {
-            IQueryable<Palestrante> query = _context.Palestrantes
-              .Include(c => c.RedesSociais);
-
-            if (includeEventos)
-            {
-                query = query
-                    .Include(pe => pe.PalestrantesEventos)
-                    .ThenInclude(e => e.Evento);
-            }
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .OrderBy(c => c.Id);
-
-            return await query.ToArrayAsync();
-        }
-
-        // LOTE
-        public async Task<Lote> GetLoteAsyncById(int loteId)
-        {
-            IQueryable<Lote> query = _context.Lotes;
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                    .Where(p => p.Id == loteId);
-
-            return await query.FirstOrDefaultAsync();
-        }
-        public async Task<Lote[]> GetAllLotesAsyncByName(string name)
-        {
-            IQueryable<Lote> query = _context.Lotes;
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .Where(p => p.Nome.ToLower().Contains(name.ToLower()));
-
-            return await query.ToArrayAsync();
-        }
-        public async Task<Lote[]> GetAllLotesAsync()
-        {
-            IQueryable<Lote> query = _context.Lotes;
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .OrderBy(c => c.Id);
-
-            return await query.ToArrayAsync();
-        }
-
-        // REDE SOCIAL
-        public async Task<RedeSocial> GetRedeSocialAsyncById(int redeSocialId)
-        {
-            IQueryable<RedeSocial> query = _context.RedeSociais;
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                    .Where(p => p.Id == redeSocialId);
-
-            return await query.FirstOrDefaultAsync();
-        }
-
-        public async Task<RedeSocial[]> GetAllRedesSociaisAsyncByName(string name)
-        {
-            IQueryable<RedeSocial> query = _context.RedeSociais;
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .Where(p => p.Nome.ToLower().Contains(name.ToLower()));
-
-            return await query.ToArrayAsync();
-        }
-
-        public async Task<RedeSocial[]> GetAllRedesSociaisAsync()
-        {
-            IQueryable<RedeSocial> query = _context.RedeSociais;
-
-            //não travar recurso para retornar consulta
-            query = query.AsNoTracking()
-                        .OrderBy(c => c.Id);
-
-            return await query.ToArrayAsync();
-        }
-
+        
     }
 }

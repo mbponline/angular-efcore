@@ -8,7 +8,6 @@ using ProAgil.WebAPI.Dtos;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
-using System.Linq;
 
 namespace ProAgil.WebAPI.v1.Controllers
 {
@@ -16,44 +15,25 @@ namespace ProAgil.WebAPI.v1.Controllers
     [Produces("application/json")]
     [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/[controller]")]
-    [ApiController]
+    [ApiController]  
     public class EventoController : ControllerBase
     {
-        private readonly IProAgilRepository _repository;
+        private readonly IProAgilRepository<Evento> _repository;
         private readonly IMapper _mapper;
 
-        public EventoController(IProAgilRepository repository, IMapper mapper)
+        public EventoController(IProAgilRepository<Evento> repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;
         }
 
-        /// <summary>
-        /// Creates a TodoItem.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "name": "Item1",
-        ///        "isComplete": true
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="item"></param>
-        /// <returns>A newly created TodoItem</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>   
+        //GET
         [HttpGet]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Getv20()
         {
             try
             {
-                var eventos = await _repository.GetAllEventoAsync(true);
+                var eventos = await _repository.GetAllAsync();
                 var result = _mapper.Map<IEnumerable<EventoDto>>(eventos);
                 return Ok(result);
             }
@@ -62,7 +42,7 @@ namespace ProAgil.WebAPI.v1.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Banco de dados falhou {ex.Message}");
             }
         }
-
+       
         [HttpPost("upload")]
         public IActionResult Upload()
         {
@@ -96,7 +76,7 @@ namespace ProAgil.WebAPI.v1.Controllers
         {
             try
             {
-                var evento = await _repository.GetEventoAsyncById(eventoId, true);
+                var evento = await _repository.GetByIdAsync(eventoId);
                 var result = _mapper.Map<EventoDto>(evento);
                 return Ok(result);
             }
@@ -111,7 +91,7 @@ namespace ProAgil.WebAPI.v1.Controllers
         {
             try
             {
-                var evento = await _repository.GetAllEventoAsyncByTema(eventoTema, true);
+                var evento = await _repository.GetAllByNameAsync(eventoTema);
                 var result = _mapper.Map<IEnumerable<EventoDto>>(evento);
                 return Ok(result);
             }
@@ -129,7 +109,7 @@ namespace ProAgil.WebAPI.v1.Controllers
             {
                 var evento = _mapper.Map<Evento>(model);
                 _repository.Add(evento);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/evento/{evento.Id}", _mapper.Map<EventoDto>(evento));
                 }
@@ -147,29 +127,11 @@ namespace ProAgil.WebAPI.v1.Controllers
         {
             try
             {
-                var evento = await _repository.GetEventoAsyncById(eventoId, false);
-                if (evento == null) return NotFound();
-
-                var idLotes = new List<int>();
-                model.Lotes.ForEach(item => idLotes.Add(item.Id));
-
-                var idRedesSociais = new List<int>();
-                model.RedesSociais.ForEach(item => idRedesSociais.Add(item.Id));
-
-                var lotes = evento.Lotes.Where(
-                    lote => !idLotes.Contains(lote.Id)).ToArray();
-
-                var redesSociais = evento.RedesSociais.Where(
-                    rede => !idRedesSociais.Contains(rede.Id)).ToArray();
-
-                if (lotes.Length > 0) _repository.Delete(lotes);
-
-                if (redesSociais.Length > 0) _repository.Delete(redesSociais);
-
+                var evento = await _repository.GetByIdAsync(eventoId);
                 _mapper.Map(model, evento);
 
                 _repository.Update(evento);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/evento/{model.Id}", _mapper.Map<EventoDto>(model));
                 }
@@ -187,10 +149,10 @@ namespace ProAgil.WebAPI.v1.Controllers
         {
             try
             {
-                var evento = await _repository.GetEventoAsyncById(eventoId, false);
+                var evento = await _repository.GetByIdAsync(eventoId);
                 if (evento == null) return NotFound();
-                _repository.Delete(evento);
-                if (await _repository.SaveChangesAsync())
+                _repository.Remove(evento.Id);
+                if (await _repository.SaveChanges())
                 {
                     return Ok();
                 }

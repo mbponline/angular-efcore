@@ -24,6 +24,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using ProAgil.WebAPI.Helpers;
 using Microsoft.OpenApi.Models;
 using System;
+using ProAgil.Domain;
 
 namespace ProAgil.WebAPI
 {
@@ -81,7 +82,10 @@ namespace ProAgil.WebAPI
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             //Injetar Dependecias
-            services.AddScoped<IProAgilRepository, ProAgilRepository>();
+            services.AddScoped<IProAgilRepository<RedeSocial>, ProAgilRepository<RedeSocial>>();
+            services.AddScoped<IProAgilRepository<Evento>, ProAgilRepository<Evento>>();
+            services.AddScoped<IProAgilRepository<Lote>, ProAgilRepository<Lote>>();
+            services.AddScoped<IProAgilRepository<Palestrante>, ProAgilRepository<Palestrante>>();
             services.AddAutoMapper();
             services.AddApiVersioning(options =>
             {

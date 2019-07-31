@@ -15,11 +15,11 @@ namespace ProAgil.WebAPI.Controllers
     [ApiController]
     public class PalestranteController : ControllerBase
     {
-        private readonly IProAgilRepository _repository;
+        private readonly IProAgilRepository<Palestrante> _repository;
 
         private readonly IMapper _mapper;
 
-        public PalestranteController(IProAgilRepository repository, IMapper mapper)
+        public PalestranteController(IProAgilRepository<Palestrante> repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;
@@ -30,7 +30,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var palestrantes = await _repository.GetAllPalestrantesAsync(true);
+                var palestrantes = await _repository.GetAllAsync();
                 var result = _mapper.Map<IEnumerable<PalestranteDto>>(palestrantes);
                 return Ok(result);
             }
@@ -45,7 +45,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var palestrante = await _repository.GetPalestranteAsyncById(palestranteId, true);
+                var palestrante = await _repository.GetByIdAsync(palestranteId);
                 var result = _mapper.Map<PalestranteDto>(palestrante);
                 return Ok(result);
             }
@@ -60,7 +60,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var palestrante = await _repository.GetAllPalestrantesAsyncByName(palestranteNome, true);
+                var palestrante = await _repository.GetAllByNameAsync(palestranteNome);
                 var result = _mapper.Map<PalestranteDto>(palestrante);
                 return Ok(result);
             }
@@ -77,7 +77,7 @@ namespace ProAgil.WebAPI.Controllers
             {
                 var palestrante = _mapper.Map<Palestrante>(model);
                 _repository.Add(palestrante);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/palestrante/{palestrante.Id}", _mapper.Map<PalestranteDto>(palestrante));
                 }
@@ -94,7 +94,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var palestrante = await _repository.GetPalestranteAsyncById(palestranteId, false);
+                var palestrante = await _repository.GetByIdAsync(palestranteId);
                 if (palestrante == null) return NotFound();
 
                 var idRedesSociais = new List<int>();
@@ -103,12 +103,12 @@ namespace ProAgil.WebAPI.Controllers
                 var redesSociais = palestrante.RedesSociais.Where(
                     rede => !idRedesSociais.Contains(rede.Id)).ToArray();
 
-                if (redesSociais.Length > 0) _repository.Delete(redesSociais);
+                if (redesSociais.Length > 0) _repository.Remove(redesSociais);
 
                 _mapper.Map(model, palestrante);
 
                 _repository.Update(palestrante);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/palestrante/{model.Id}", _mapper.Map<PalestranteDto>(model));
                 }
@@ -124,13 +124,12 @@ namespace ProAgil.WebAPI.Controllers
         [HttpDelete("{palestranteId}")]
         public async Task<IActionResult> Delete(int palestranteId)
         {
-
             try
             {
-                var palestrante = await _repository.GetPalestranteAsyncById(palestranteId, false);
+                var palestrante = await _repository.GetByIdAsync(palestranteId);
                 if (palestrante == null) return NotFound();
-                _repository.Delete(palestrante);
-                if (await _repository.SaveChangesAsync())
+                _repository.Remove(palestrante.Id);
+                if (await _repository.SaveChanges())
                 {
                     return Ok();
                 }

@@ -14,10 +14,10 @@ namespace ProAgil.WebAPI.Controllers
     [ApiController]
     public class LoteController : ControllerBase
     {
-        private readonly IProAgilRepository _repository;
+        private readonly IProAgilRepository<Lote> _repository;
         private readonly IMapper _mapper;
 
-        public LoteController(IProAgilRepository repository, IMapper mapper)
+        public LoteController(IProAgilRepository<Lote> repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;
@@ -28,7 +28,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var lotes = await _repository.GetAllLotesAsync();
+                var lotes = await _repository.GetAllAsync();
                 var result = _mapper.Map<IEnumerable<LoteDto>>(lotes);
                 return Ok(result);
             }
@@ -43,7 +43,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var lote = await _repository.GetLoteAsyncById(loteId);
+                var lote = await _repository.GetByIdAsync(loteId);
                 var result = _mapper.Map<LoteDto>(lote);
                 return Ok(result);
             }
@@ -59,7 +59,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var lotes = await _repository.GetAllLotesAsyncByName(loteName);
+                var lotes = await _repository.GetAllByNameAsync(loteName);
                 var result = _mapper.Map<IEnumerable<LoteDto>>(lotes);
                 return Ok(result);
             }
@@ -76,7 +76,7 @@ namespace ProAgil.WebAPI.Controllers
             {
                 var lote = _mapper.Map<Lote>(model);
                 _repository.Add(lote);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/lote/{lote.Id}", _mapper.Map<LoteDto>(lote));
                 }
@@ -93,13 +93,13 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var lote = await _repository.GetLoteAsyncById(loteId);
+                var lote = await _repository.GetByIdAsync(loteId);
                 if (lote == null) return NotFound();
 
                 _mapper.Map(model, lote);
 
                 _repository.Update(lote);
-                if (await _repository.SaveChangesAsync())
+                if (await _repository.SaveChanges())
                 {
                     return Created($"/api/lote/{model.Id}", _mapper.Map<LoteDto>(model));
                 }
@@ -117,10 +117,10 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var lote = await _repository.GetLoteAsyncById(loteId);
+                var lote = await _repository.GetByIdAsync(loteId);
                 if (lote == null) return NotFound();
-                _repository.Delete(lote);
-                if (await _repository.SaveChangesAsync())
+                _repository.Remove(lote.Id);
+                if (await _repository.SaveChanges())
                 {
                     return Ok();
                 }

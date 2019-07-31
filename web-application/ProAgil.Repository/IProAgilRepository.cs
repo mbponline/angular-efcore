@@ -1,37 +1,23 @@
+using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ProAgil.Domain;
 
 namespace ProAgil.Repository
 {
-    public interface IProAgilRepository
+    public interface IProAgilRepository<T> where T : class
     {
-        //GERAL
-        void Add<T>(T entity) where T : class;
-        void Update<T>(T entity) where T : class;
-        void Delete<T>(T entity) where T : class;
-        void DeleteRange<T>(T[] entity) where T : class;
-
-        Task<bool> SaveChangesAsync();
-
-        //EVENTOS
-        Task<Evento[]> GetAllEventoAsyncByTema(string tema, bool includePalestrantes);
-        Task<Evento[]> GetAllEventoAsync(bool includePalestrantes);
-        Task<Evento> GetEventoAsyncById(int eventoId, bool includePalestrantes);
-
-        //PALESTRANTE
-        Task<Palestrante[]> GetAllPalestrantesAsyncByName(string name, bool includeEventos);
-        Task<Palestrante[]> GetAllPalestrantesAsync(bool includeEventos);
-        Task<Palestrante> GetPalestranteAsyncById(int palestranteId, bool includeEventos);
-
-        // Lotes
-        Task<Lote[]> GetAllLotesAsync();
-        Task<Lote[]> GetAllLotesAsyncByName(string loteName);
-        Task<Lote> GetLoteAsyncById(int loteId);
-
-        // REDE SOCIAL
-        Task<RedeSocial[]> GetAllRedesSociaisAsync();
-        Task<RedeSocial[]> GetAllRedesSociaisAsyncByName(string loteName);
-        Task<RedeSocial> GetRedeSocialAsyncById(int loteId);
-
+        void Add(T entity);
+        void Update(T entity);
+        void Remove(int id);
+         void Remove(params object[] keyValues);
+        void Dispose();       
+        Task<bool> SaveChanges();
+        Task<int> GetMax(Expression<Func<T, int>> select);
+        Task<int> GetMin(Expression<Func<T, int>> select);
+        Task<bool> Exists(int id);
+        Task<T> GetByIdAsync(int id);
+        Task<T[]> GetAllAsync();
+        Task<T[]> GetAllByNameAsync(string name);
     }
 }
