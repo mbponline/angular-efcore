@@ -8,6 +8,14 @@ namespace ProAgil.Data.Repositories
 {
     public class EventoRepository : IEventoRepository
     {
+
+        private readonly ProAgilContext _context;
+
+        public EventoRepository(ProAgilContext context)
+        {
+            _context = context;
+        }
+
         public void Add(Evento evento)
         {
             throw new NotImplementedException();
@@ -23,9 +31,9 @@ namespace ProAgil.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Evento[]> GetAllAsync()
+        public async Task<Evento[]> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Eventos;
         }
 
         public Task<Evento[]> GetAllByNameAsync(string name)
