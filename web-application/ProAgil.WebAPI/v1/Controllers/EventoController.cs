@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProAgil.Domain;
-using ProAgil.Repository;
+using ProAgil.Domain.Entities;
+using ProAgil.Domain.Contracts.Repositories;
 using System.Threading.Tasks;
 using AutoMapper;
 using ProAgil.WebAPI.Dtos;
@@ -18,10 +18,10 @@ namespace ProAgil.WebAPI.v1.Controllers
     [ApiController]  
     public class EventoController : ControllerBase
     {
-        private readonly IProAgilRepository<Evento> _repository;
+        private readonly IEventoRepository _repository;
         private readonly IMapper _mapper;
 
-        public EventoController(IProAgilRepository<Evento> repository, IMapper mapper)
+        public EventoController(IEventoRepository repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;

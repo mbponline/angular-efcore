@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System;
-namespace ProAgil.Domain
+namespace ProAgil.Domain.Entities
 {
     public class Evento
     {

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-namespace ProAgil.Domain
+
+namespace ProAgil.Domain.Entities
+
 {
     public class Palestrante
     {

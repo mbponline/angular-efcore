@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProAgil.Domain;
-using ProAgil.Repository;
+using ProAgil.Domain.Entities;
+using ProAgil.Domain.Contracts.Repositories;
+using ProAgil.Data;
 using ProAgil.WebAPI.Dtos;
 
 namespace ProAgil.WebAPI.Controllers
@@ -14,10 +15,10 @@ namespace ProAgil.WebAPI.Controllers
     [ApiController]
     public class RedeSocialController : ControllerBase
     {
-        private readonly IProAgilRepository<RedeSocial> _repository;
+        private readonly IRedeSocialRepository  _repository;
         private readonly IMapper _mapper;
 
-        public RedeSocialController(IProAgilRepository<RedeSocial> repository, IMapper mapper)
+        public RedeSocialController(IRedeSocialRepository  repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;

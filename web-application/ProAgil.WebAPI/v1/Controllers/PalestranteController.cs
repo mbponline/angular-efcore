@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProAgil.Domain;
-using ProAgil.Repository;
+using ProAgil.Domain.Entities;
+using ProAgil.Domain.Contracts.Repositories;
+using ProAgil.Data;
 using ProAgil.WebAPI.Dtos;
 
 namespace ProAgil.WebAPI.Controllers
@@ -15,11 +16,11 @@ namespace ProAgil.WebAPI.Controllers
     [ApiController]
     public class PalestranteController : ControllerBase
     {
-        private readonly IProAgilRepository<Palestrante> _repository;
+        private readonly IPalestranteRepository _repository;
 
         private readonly IMapper _mapper;
 
-        public PalestranteController(IProAgilRepository<Palestrante> repository, IMapper mapper)
+        public PalestranteController(IPalestranteRepository repository, IMapper mapper)
         {
             _mapper = mapper;
             _repository = repository;

@@ -1,4 +1,5 @@
-namespace ProAgil.Domain
+namespace ProAgil.Domain.Entities
+
 {
     public class PalestranteEvento
     {

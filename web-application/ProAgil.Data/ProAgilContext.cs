@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ProAgil.Domain;
-using ProAgil.Domain.identity;
+using ProAgil.Domain.Entities;
+using ProAgil.Domain.Entities.Identity;
 
-namespace ProAgil.Repository
+namespace ProAgil.Data
 {
 
     public class ProAgilContext : IdentityDbContext<User, Role, int,

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ProAgil.Domain.identity;
+using ProAgil.Domain.Entities.Identity;
 using ProAgil.WebAPI.Dtos;
 
 namespace ProAgil.WebAPI.Controllers

@@ -1,6 +1,6 @@
 using AutoMapper;
-using ProAgil.Domain;
-using ProAgil.Domain.identity;
+using ProAgil.Domain.Entities;
+using ProAgil.Domain.Entities.Identity;
 using ProAgil.WebAPI.Dtos;
 using System.Linq;
 

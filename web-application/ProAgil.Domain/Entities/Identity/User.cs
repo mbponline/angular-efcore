@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProAgil.Domain.identity
+namespace ProAgil.Domain.Entities.Identity
 {
     public class User : IdentityUser<int>
     {

@@ -1,5 +1,6 @@
-using System.Security.AccessControl;
-namespace ProAgil.Domain
+
+namespace ProAgil.Domain.Entities
+
 {
     public class RedeSocial
     {

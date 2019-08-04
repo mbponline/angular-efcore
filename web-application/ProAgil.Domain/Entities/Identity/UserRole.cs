@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace ProAgil.Domain.identity
+namespace ProAgil.Domain.Entities.Identity
 {
     
     // IdentityUserRole<int> determina que a chave autoincrementada seja um inteiro

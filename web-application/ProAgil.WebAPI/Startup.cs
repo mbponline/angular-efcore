@@ -17,14 +17,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
-using ProAgil.Domain.identity;
-using ProAgil.Repository;
+using ProAgil.Data;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Swashbuckle.AspNetCore.Swagger;
 using ProAgil.WebAPI.Helpers;
 using Microsoft.OpenApi.Models;
 using System;
-using ProAgil.Domain;
+using ProAgil.Domain.Entities;
+using ProAgil.Domain.Entities.Identity;
+using ProAgil.Domain.Contracts.Repositories;
+using ProAgil.Data.Repositories;
 
 namespace ProAgil.WebAPI
 {
@@ -82,10 +84,10 @@ namespace ProAgil.WebAPI
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             //Injetar Dependecias
-            services.AddScoped<IProAgilRepository<RedeSocial>, ProAgilRepository<RedeSocial>>();
-            services.AddScoped<IProAgilRepository<Evento>, ProAgilRepository<Evento>>();
-            services.AddScoped<IProAgilRepository<Lote>, ProAgilRepository<Lote>>();
-            services.AddScoped<IProAgilRepository<Palestrante>, ProAgilRepository<Palestrante>>();
+            services.AddScoped<IEventoRepository , EventoRepository>();
+            services.AddScoped<IRedeSocialRepository, RedeSocialRepository>();
+            services.AddScoped<ILoteRepository, LoteRepository>();
+            services.AddScoped<IPalestranteRepository, PalestranteRepository>();
             services.AddAutoMapper();
             services.AddApiVersioning(options =>
             {
