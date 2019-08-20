@@ -33,7 +33,7 @@ namespace ProAgil.Data.Repositories
 
         public async Task<Evento[]> GetAllAsync()
         {
-            return await _context.Eventos;
+            throw new NotImplementedException();
         }
 
         public Task<Evento[]> GetAllByNameAsync(string name)
